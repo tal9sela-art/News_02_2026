@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>INSIGHT - ניוזלטר המחלקה לפסיכולוגיה | האקדמית כנרת</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&family=Rubik:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            /* Kinneret Brand Colors */
+            --kinneret-blue: #0057C4;      
+            --kinneret-teal: #1C8F6A;      
+            --kinneret-orange: #FF8C29;    
+            --kinneret-red: #FC4539;
+            
+            /* UI Colors */
+            --bg-body: #cbd5e0;
+            --bg-light: #f8fafc;
+            --text-dark: #1a202c;
+            --text-gray: #2d3748;
+            --text-muted: #718096;
+            
+            /* Styling Tokens */
+            --shadow-card: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-float: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --safe-bottom: env(safe-area-inset-bottom, 20px);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        html, body {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; 
+            font-family: 'Heebo', sans-serif;
+            background-color: var(--bg-body); 
+            color: var(--text-dark);
+        }
+
+        /* Directionality Utilities */
+        .ltr-content { direction: ltr; text-align: left; }
+        .en-title { font-family: 'Rubik', sans-serif; direction: ltr; text-align: left; display: block; unicode-bidi: embed; }
+        .en-inline { font-family: 'Rubik', sans-serif; direction: ltr; unicode-bidi: embed; display: inline-block; font-weight: 500; }
+
+        /* App Container */
+        .app-container {
+            width: 100%; height: 100%; max-width: 600px;
+            margin: 0 auto; background: var(--bg-light);
+            display: flex; flex-direction: column;
+            position: relative; box-shadow: 0 0 80px rgba(0,0,0,0.25);
+        }
+
+        /* --- Screens Management --- */
+        .screens-wrapper { flex: 1; position: relative; overflow: hidden; }
+
+        .screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            padding: 20px; 
+            padding-bottom: 90px; /* Space for bottom nav */
+            overflow-y: auto; 
+            -webkit-overflow-scrolling: touch;
+            background: var(--bg-light); 
+            opacity: 0; pointer-events: none;
+            transform: scale(0.96); 
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1;
+        }
+        
+        .screen.active { 
+            opacity: 1; 
+            pointer-events: auto; 
+            transform: scale(1); 
+            z-index: 10; 
+        }
+
+        /* --- Detail Modal View --- */
+        .detail-view {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; 
+            z-index: 1000; 
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.32, 0.725, 0.32, 1);
+            display: flex; flex-direction: column;
+            visibility: hidden;
+        }
+        
+        .detail-view.open { 
+            transform: translateY(0); 
+            visibility: visible;
+        }
+
+        .detail-header { 
+            height: 70px; display: flex; align-items: center; padding: 0 20px; 
+            background: rgba(255,255,255,0.95); 
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #edf2f7; 
+            flex-shrink: 0;
+            position: sticky; top: 0; z-index: 10;
+        }
+
+        .detail-body { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 25px; 
+            /* Added padding-bottom to account for the persistent nav bar (80px) + space */
+            padding-bottom: calc(80px + var(--safe-bottom) + 30px);
+            -webkit-overflow-scrolling: touch; 
+        }
+
+        /* --- Structured Content --- */
+        .research-section { margin-bottom: 25px; }
+        .section-title {
+            font-size: 0.95rem; font-weight: 900; color: var(--kinneret-blue);
+            margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
+            background: #f1f5f9; padding: 8px 12px; border-radius: 8px; width: fit-content;
+        }
+        .section-content {
+            font-size: 1rem; color: #2d3748; line-height: 1.6; padding-right: 5px;
+        }
+
+        /* --- Infographics CSS --- */
+        .infographic-box {
+            background: white; padding: 15px; border-radius: 12px; margin: 15px 0;
+            border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .chart-row { display: flex; align-items: center; margin-bottom: 10px; font-size: 0.9rem; }
+        .chart-row:last-child { margin-bottom: 0; }
+        .chart-label { width: 90px; font-weight: 600; color: var(--text-dark); line-height: 1.1; }
+        .chart-bar-container { flex: 1; height: 10px; background: #e2e8f0; border-radius: 6px; overflow: hidden; margin: 0 10px; }
+        .chart-bar { height: 100%; border-radius: 6px; animation: growBar 1.5s ease-out forwards; width: 0; }
+        .chart-val { width: 35px; text-align: left; font-weight: 800; font-size: 0.85rem; color: var(--text-muted); }
+        
+        @keyframes growBar { to { width: var(--w); } }
+
+        .pillars-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .pillar-item { 
+            background: #f8fafc; padding: 12px; border-radius: 10px; text-align: center; 
+            font-size: 0.85rem; font-weight: 700; color: var(--text-dark);
+            border: 1px solid #e2e8f0;
+        }
+        .pillar-item i { display: block; font-size: 1.4rem; margin-bottom: 6px; color: var(--kinneret-blue); }
+
+        .comparison-row { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 10px; border-bottom: 1px solid #edf2f7; 
+        }
+        .comparison-row:last-child { border-bottom: none; }
+        .comp-label { font-weight: 600; color: var(--text-gray); }
+        .comp-val { font-weight: 800; }
+        .comp-val.good { color: var(--kinneret-teal); }
+        .comp-val.bad { color: var(--kinneret-red); }
+        
+        /* --- Typography & Branding --- */
+        .header-brand {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            background: white; padding: 12px 30px; border-radius: 50px;
+            box-shadow: var(--shadow-card); margin-bottom: 25px; 
+            font-weight: 800; 
+            font-size: 1.4rem; 
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        .slogan { color: var(--kinneret-blue); font-size: 1.4rem; }
+        .slogan span { color: var(--kinneret-red); }
+
+        /* Enlarged Main Title */
+        h1 { font-family: 'Rubik', sans-serif; font-size: 4.2rem; color: var(--kinneret-blue); font-weight: 900; line-height: 0.8; margin: 10px 0; letter-spacing: -2px; }
+        
+        h2 { font-family: 'Rubik', sans-serif; font-size: 1.8rem; color: var(--kinneret-blue); font-weight: 800; margin-bottom: 15px; margin-top: 0; line-height: 1.1; }
+        
+        p { line-height: 1.6; color: var(--text-gray); margin-bottom: 15px; }
+
+        /* --- Images --- */
+        .hero-img {
+            width: 100%; height: 210px; border-radius: var(--radius-md);
+            object-fit: cover; margin-bottom: 25px; box-shadow: var(--shadow-float);
+        }
+        .article-img {
+            width: 100%; height: 200px; border-radius: var(--radius-md);
+            object-fit: cover; margin-bottom: 20px;
+            box-shadow: var(--shadow-card);
+        }
+
+        /* --- TOC Grid (Home) --- */
+        .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; margin-top: 15px; }
+        
+        .toc-card {
+            background: white; padding: 20px 15px; border-radius: var(--radius-md);
+            box-shadow: var(--shadow-card); cursor: pointer; text-align: center;
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            transition: transform 0.2s; border: 1px solid white;
+        }
+        .toc-card:active { transform: scale(0.96); background: #f8fafc; }
+        .toc-card i { font-size: 2.2rem; margin-bottom: 5px; }
+        .toc-card span { font-weight: 800; color: var(--text-dark); font-size: 1rem; }
+        
+        /* Make the last card span full width if there's an odd number (3) */
+        .toc-card:last-child:nth-child(odd) {
+             grid-column: span 2;
+        }
+
+        /* --- Article Strips (Lists) --- */
+        .article-strip {
+            background: white; padding: 20px; border-radius: var(--radius-md); margin-bottom: 15px;
+            box-shadow: var(--shadow-card); display: flex; align-items: center;
+            justify-content: space-between; cursor: pointer; 
+            border-right: 6px solid var(--kinneret-blue);
+            transition: transform 0.2s; position: relative; overflow: hidden;
+        }
+        .article-strip:active { transform: scale(0.98); background: #f8f9fa; }
+        .article-meta { font-size: 0.75rem; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; display: block; }
+        .article-title { font-weight: 800; font-size: 1.1rem; line-height: 1.2; }
+
+        /* Bullet List in Editor */
+        .editor-list { list-style: none; padding: 0; margin: 15px 0; }
+        .editor-list li { 
+            position: relative; padding-right: 20px; margin-bottom: 12px; 
+            font-size: 0.95rem; color: var(--text-dark);
+        }
+        .editor-list li::before {
+            content: "•"; color: var(--kinneret-blue); font-weight: bold; font-size: 1.5rem;
+            position: absolute; right: 0; top: -5px;
+        }
+        
+        /* Intro Points */
+        .intro-point {
+            display: flex; gap: 12px; margin-bottom: 15px;
+        }
+        .intro-point i {
+            color: var(--kinneret-blue); margin-top: 4px; flex-shrink: 0;
+        }
+
+        /* --- Navigation --- */
+        .bottom-nav {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            height: 80px; background: white; 
+            border-top: 1px solid #edf2f7;
+            display: flex; justify-content: space-around; align-items: center;
+            padding-bottom: var(--safe-bottom); 
+            z-index: 1100; /* Increased to be above detail views (1000) */
+            flex-shrink: 0;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.03);
+        }
+        .nav-btn {
+            background: none; border: none; color: #cbd5e0;
+            display: flex; flex-direction: column; align-items: center; gap: 5px; 
+            font-size: 0.75rem; font-weight: 700; cursor: pointer;
+            width: 20%; height: 100%; justify-content: center;
+            transition: color 0.3s;
+        }
+        .nav-btn.active { color: var(--kinneret-blue); }
+        .nav-btn i { font-size: 1.4rem; }
+
+        /* --- Buttons --- */
+        .btn-link {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 16px; border-radius: 50px; text-decoration: none;
+            background: var(--kinneret-blue); color: white; font-weight: 800;
+            box-shadow: 0 8px 20px rgba(0, 87, 196, 0.25); margin-top: 20px;
+            transition: 0.2s;
+        }
+        .btn-copy {
+            background: #fff; color: var(--kinneret-blue); 
+            border: 2px dashed var(--kinneret-blue);
+            padding: 14px; border-radius: 12px; font-weight: 800; cursor: pointer;
+            margin-top: 15px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+
+        /* --- Images Gallery for Registration --- */
+        .gallery-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px;
+        }
+        .gallery-img {
+            width: 100%; height: 120px; object-fit: cover; border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .gallery-img.large { grid-column: span 2; height: 160px; }
+
+        /* --- Toast --- */
+        #toast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-20px);
+            background: #2d3748; color: white; padding: 12px 30px; border-radius: 50px;
+            opacity: 0; transition: 0.4s; z-index: 2000; font-weight: 700; pointer-events: none;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2); font-size: 0.9rem;
+        }
+        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        
+        /* --- Connection to Studies List --- */
+        .studies-connect {
+            background-color: #f0f4f8; border-radius: 12px; padding: 15px;
+            border-right: 4px solid var(--kinneret-teal);
+        }
+        .studies-item { margin-bottom: 12px; font-size: 0.95rem; }
+        .studies-item:last-child { margin-bottom: 0; }
+        .studies-title { color: var(--kinneret-teal); font-weight: 800; display: block; margin-bottom: 2px; }
+
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <div class="screens-wrapper">
+
+        <!-- 1. HOME SCREEN -->
+        <div class="screen active" id="screen-home">
+            <div style="min-height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                
+                <!-- Increased Brand Size & Unified Blue Color -->
+                <div class="header-brand">
+                    <span style="color:var(--kinneret-blue);">האקדמית כנרת</span> | <div class="slogan">עושים. <span>חיים!</span></div>
+                </div>
+                
+                <h1 style="margin-bottom: 5px;">INSIGHT</h1>
+                
+                <!-- Red & Blue Subtitle -->
+                <p style="font-size:1.2rem; font-weight:700; margin-top:0;">
+                    <span style="color:var(--kinneret-red)">הניוזלטר של המחלקה לפסיכולוגיה</span> 
+                    <span style="color:var(--text-muted)">|</span> 
+                    <span style="color:var(--kinneret-blue)">פברואר 2026</span>
+                </p>
+                
+                <!-- Explicit Labyrinth Hero Image -->
+                <img src="https://images.unsplash.com/photo-1505330622279-bf7d7fc918f4?q=80&w=600&auto=format&fit=crop" class="hero-img" alt="מבוך פסיכולוגי" onerror="this.src='https://images.unsplash.com/photo-1519682337058-a5ca05e24b06?q=80&w=600&auto=format&fit=crop'">
+
+                <div class="toc-grid">
+                    <div class="toc-card" onclick="goToScreen('screen-editor')">
+                        <i class="fa-solid fa-pen-nib" style="color:var(--kinneret-blue)"></i>
+                        <span>פינת העורך</span>
+                    </div>
+                    <div class="toc-card" onclick="goToScreen('screen-spotlight')">
+                        <i class="fa-solid fa-star" style="color:var(--kinneret-orange)"></i>
+                        <span>גאווה מקומית</span>
+                    </div>
+                    <div class="toc-card" onclick="goToScreen('screen-science')">
+                        <i class="fa-solid fa-microscope" style="color:var(--kinneret-teal)"></i>
+                        <span>חזית המדע</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. EDITOR SCREEN -->
+        <div class="screen" id="screen-editor">
+            <h2 style="padding-top: 10px;">פינת העורך</h2>
+            <div style="background:white; padding:30px; border-radius:var(--radius-lg); box-shadow:var(--shadow-card);">
+                <div style="display:flex; align-items:center; gap:15px; margin-bottom:25px;">
+                    <!-- User Profile Image from Google Drive -->
+                    <img src="https://drive.google.com/uc?export=view&id=16xY4xLlpTm3Axuxupdy3FU1U20K0Bh14" 
+                         alt="ד&quot;ר טל סלע" 
+                         style="width:65px; height:65px; border-radius:50%; object-fit:cover; box-shadow: 0 4px 10px rgba(0,87,196,0.3);"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    
+                    <!-- Fallback Icon if Image Fails -->
+                    <div style="width:65px; height:65px; background: linear-gradient(135deg, var(--kinneret-blue), #2b6cb0); border-radius:50%; display:none; align-items:center; justify-content:center; color:white; font-size:1.6rem; box-shadow: 0 4px 10px rgba(0,87,196,0.3);">
+                        <i class="fa-solid fa-user-doctor"></i>
+                    </div>
+
+                    <div>
+                        <div style="font-weight:900; color:var(--text-dark); font-size:1.2rem;">ד"ר טל סלע</div>
+                        <div style="font-size:0.9rem; color:var(--kinneret-blue); font-weight:600;">ראש המחלקה לפסיכולוגיה</div>
+                    </div>
+                </div>
+
+                <p style="font-weight: 500; font-size: 1.05rem;">ברוכות וברוכים הבאים לניוזלטר שלנו 😊</p>
+                
+                <p>פסיכולוגיה היא אחד התחומים הכי מרתקים בדיוק בגלל שהיא יושבת על התפר: מצד אחד—שאלות ענק על בני אדם (למה אנחנו אוהבים, פוחדים, נשברים, קמים, משתנים). מצד שני—כלים מדעיים שמכריחים אותנו להיות מדויקים: למדוד, לבדוק, להשוות, ולהיות מספיק אמיצים להגיד גם “טעיתי”.</p>
+                
+                <p>מחקר בפסיכולוגיה הוא לא “עוד מטלה” ולא משהו ששמור רק לחוקרים באקדמיה. הוא הדרך שלנו להבדיל בין תחושה לביסוס, בין אינטואיציה לסיבה, בין סיפור יפה למסקנה שעומדת במבחן המציאות. והוא גם מה שהופך את הידע שלנו לרלוונטי באמת—לטיפול, לחינוך, לארגונים, לחיים עצמם.</p>
+
+                <p style="margin-bottom: 5px;">בכל גיליון בפינה הזאת ננסה לעשות שלושה דברים פשוטים, אבל לא טריוויאליים:</p>
+                <ul class="editor-list" style="margin-top: 5px;">
+                    <li>להביא אליכם מחקרים חדשים ומסקרנים — כאלה שמרחיבים את המחשבה, מפתיעים, ומסבירים משהו אמיתי על אנשים.</li>
+                    <li>להראות איך מדע "עובד באמת" — לא רק מסקנות, אלא גם היגיון, שיטות, מגבלות, ומה הופך ממצא לאמין.</li>
+                    <li>לחבר בין מחקר לחיים — קליניקה, חינוך, ארגונים, זוגיות, רווחה נפשית, קבלת החלטות, וחוויית היומיום.</li>
+                </ul>
+
+                <p>כי פסיכולוגיה טובה היא לא אוסף של דעות. היא שפה של ראיות: דרך שיטתית לשאול שאלות על התודעה, ההתנהגות, הרגש והחברה — ולהתקרב לתשובות עם צניעות מדעית ועם אומץ אינטלקטואלי.</p>
+                <p>זה בדיוק המקום שבו "מדע פורץ דרך" קורה: לא בהכרח דרמה, אלא דיוק. לא קסם, אלא ניסוי טוב. לא סיסמה, אלא נתונים שמחזיקים מים.</p>
+
+                <p><strong>אז מה מחכה לנו כאן?</strong> מחקרים קצרים לקריאה, נקודות מפתח, "למה זה חשוב", ולפעמים גם שאלה אחת קטנה לסיום — כדי שתמשיכו לחשוב עוד רגע אחרי שתסיימו לקרוא.</p>
+
+                <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0; border: 1px solid #e2e8f0;">
+                    <strong style="color:var(--kinneret-blue); font-size:1rem; display:block; margin-bottom:10px;">המחקרים השונים שאנחנו מכסים בגיליון זה:</strong>
+                    <ul class="editor-list">
+                         <li>
+                            <strong style="color:var(--kinneret-orange)">גאווה מקומית:</strong> הישג יוצא דופן לסטודנטית שלנו, שני אלומה, שפרסמה יחד עם ד"ר אלכסנדר מנביץ' מאמר בכתב עת יוקרתי.
+                        </li>
+                        <li>
+                            <strong style="color:var(--kinneret-teal)">מכונות אמפתיות:</strong> מחקר מ-Nature Machine Intelligence שואל האם AI מבין רגשות טוב יותר מ"האדם הממוצע"?
+                        </li>
+                        <li>
+                            <strong style="color:var(--kinneret-blue)">נוירו-פסיכולוגיה:</strong> מאמר מ-Nature Neuroscience שמערער על התפיסה הקלאסית המחברת בין אזורי מוח לתפקודים מנטליים.
+                        </li>
+                        <li>
+                            <strong style="color:var(--kinneret-red)">מדידת אושר:</strong> תובנה מ-Nature Human Behaviour על כך שלפעמים שאלה אחת פשוטה עדיפה על שאלונים מורכבים.
+                        </li>
+                        <li>
+                            <strong style="color:var(--kinneret-teal)">אוטיזם:</strong> מחקר ענק מ-Nature Medicine ששופך אור לגבי הקשר בין מחלות בהריון לאוטיזם.
+                        </li>
+                    </ul>
+                </div>
+
+                <div style="font-weight:900; color:var(--kinneret-blue); text-align: left; padding-top:10px; font-size: 1.2rem;">
+                    קריאה מהנה!<br>
+                    טל
+                </div>
+
+                <!-- Contact Section -->
+                <div style="margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 20px; font-size: 0.9rem; color: var(--text-gray);">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:5px; font-weight:700;">
+                        <i class="fa-solid fa-envelope" style="color:var(--kinneret-blue);"></i>
+                        יצירת קשר:
+                    </div>
+                    <a href="mailto:tal9.sela@mx.kinneret.ac.il" style="color:var(--text-dark); text-decoration:none; font-family:'Rubik', sans-serif; direction:ltr; unicode-bidi: embed;">tal9.sela@mx.kinneret.ac.il</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. SPOTLIGHT SCREEN -->
+        <div class="screen" id="screen-spotlight">
+            <span style="color:var(--kinneret-orange); font-weight:900; font-size:0.85rem; display:block; margin-bottom:5px;">גאווה מקומית</span>
+            <h2>גאווה מקומית</h2>
+            
+            <div class="article-strip" onclick="openDetail('detail-aluma')" style="border-right-color: var(--kinneret-orange);">
+                <div>
+                    <div class="article-title en-title" style="color:var(--text-dark);">Artificial Continuing Bonds</div>
+                    <p style="font-size:0.9rem; color:var(--text-muted); margin:4px 0 0 0;"><strong>שני אלומה (סטודנטית שלנו!)</strong> וד"ר אלכסנדר מנביץ'</p>
+                </div>
+                <i class="fa-solid fa-chevron-left" style="color:var(--kinneret-orange);"></i>
+            </div>
+            
+            <div style="padding: 20px; background:white; border-radius:12px; box-shadow:var(--shadow-card);">
+                <p>הישג יוצא דופן לסטודנטית שלנו, <strong>שני אלומה</strong>, שפרסמה יחד עם ד"ר אלכסנדר מנביץ' מאמר בכתב עת יוקרתי.</p>
+                <p>המאמר עוסק באחת הסוגיות האתיות הבוערות ביותר: כיצד ניתן לשלב בינה מלאכותית בתהליכי פרידה ואבל בצורה אחראית?</p>
+            </div>
+        </div>
+
+        <!-- 4. SCIENCE SCREEN -->
+        <div class="screen" id="screen-science">
+            <span style="color:var(--kinneret-teal); font-weight:900; font-size:0.85rem; display:block; margin-bottom:5px;">מה חדש במדע?</span>
+            <h2>חזית המדע העולמית</h2>
+            
+            <!-- Kumar -->
+            <div class="article-strip" onclick="openDetail('detail-kumar')" style="border-color:var(--kinneret-teal);">
+                <div>
+                    <span class="article-meta ltr-content" style="color:var(--kinneret-teal);">NATURE MACHINE INTELLIGENCE</span>
+                    <div class="article-title">שיפוט אמפתיה: AI מול אדם</div>
+                </div>
+                <i class="fa-solid fa-chevron-left" style="color:var(--text-muted);"></i>
+            </div>
+
+            <!-- Hayden -->
+            <div class="article-strip" onclick="openDetail('detail-hayden')" style="border-color:var(--kinneret-blue);">
+                <div>
+                    <span class="article-meta ltr-content" style="color:var(--kinneret-blue);">NATURE NEUROSCIENCE</span>
+                    <div class="article-title">הסוף למפת האזורים במוח?</div>
+                </div>
+                <i class="fa-solid fa-chevron-left" style="color:var(--text-muted);"></i>
+            </div>
+
+            <!-- Helliwell -->
+            <div class="article-strip" onclick="openDetail('detail-helliwell')" style="border-color:var(--kinneret-red);">
+                <div>
+                    <span class="article-meta ltr-content" style="color:var(--kinneret-red);">NATURE HUMAN BEHAVIOUR</span>
+                    <div class="article-title">מדעי האושר: פחות זה יותר</div>
+                </div>
+                <i class="fa-solid fa-chevron-left" style="color:var(--text-muted);"></i>
+            </div>
+
+            <!-- Khachadourian -->
+            <div class="article-strip" onclick="openDetail('detail-khachadourian')" style="border-color:var(--kinneret-teal);">
+                <div>
+                    <span class="article-meta ltr-content" style="color:var(--kinneret-teal);">NATURE MEDICINE</span>
+                    <div class="article-title">אוטיזם: הפרכת הקשר למחלות האם</div>
+                </div>
+                <i class="fa-solid fa-chevron-left" style="color:var(--text-muted);"></i>
+            </div>
+        </div>
+
+        <!-- 5. REGISTER SCREEN -->
+        <div class="screen" id="screen-register">
+            <div style="min-height:100%; display:flex; flex-direction:column; align-items:center; text-align:center;">
+                
+                <h2 style="margin-bottom:10px;">העתיד מתחיל כאן</h2>
+                 <div class="header-brand">
+                    <span style="color:var(--kinneret-blue);">האקדמית כנרת</span> | <div class="slogan">עושים. <span>חיים!</span></div>
+                </div>
+                <div class="gallery-grid">
+                    <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=600&auto=format&fit=crop" class="gallery-img large" alt="Campus Life" onerror="this.src='https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=600&auto=format&fit=crop'">
+                    <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=300&auto=format&fit=crop" class="gallery-img" alt="Students" onerror="this.src='https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=300&auto=format&fit=crop'">
+                    <img src="https://images.unsplash.com/photo-1590012314607-cda9d9b699ae?q=80&w=300&auto=format&fit=crop" class="gallery-img" alt="Library" onerror="this.src='https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=300&auto=format&fit=crop'">
+                </div>
+
+                <p style="max-width:300px; margin:0 auto 20px auto;">המחלקה לפסיכולוגיה מעניקה לכם הרבה יותר מתואר: יחס אישי, התנסות מעשית, ומצוינות אקדמית.</p>
+                
+                <a href="https://do.kinneret.ac.il/studies/ba-psychology/" target="_blank" class="btn-link" style="width:100%; max-width:280px;">
+                    <span>למידע והרשמה</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- === DETAILS OVERLAYS === -->
+
+    <!-- ALUMA DETAIL -->
+    <div class="detail-view" id="detail-aluma">
+        <div class="detail-header"><button class="btn-back" onclick="closeAllDetails()"><i class="fa-solid fa-arrow-right"></i> חזרה</button></div>
+        <div class="detail-body">
+            <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600&auto=format&fit=crop" class="article-img" alt="AI Interface">
+            
+            <h2 class="en-title" style="margin-bottom:5px;">Artificial Continuing Bonds</h2>
+            <div class="ltr-content" style="color:var(--kinneret-orange); font-weight:700; font-size:0.9rem; margin-bottom:20px;">
+                Manevich & Aluma (2025) • OMEGA
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-circle-question"></i> שאלת המחקר</div>
+                <div class="section-content">כיצד ניתן לשלב באופן אחראי ואתי טכנולוגיות <span class="en-inline">Generative AI</span> (כמו "בוטים של אבל") בטיפול באובדן ושכול?</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-book-open"></i> תיאוריה</div>
+                <div class="section-content">המאמר נשען על מודל ה-<span class="en-inline">Continuing Bonds</span> (קשרים נמשכים) ועל מושג "אובייקט המעבר" של ויניקוט.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-lightbulb"></i> חידוש: 4 עמודי התווך</div>
+                <div class="section-content" style="margin-bottom:15px;">הצגת המושג <span class="en-inline">"Digital Transitional Object"</span>. במקום לראות ב-AI תחליף לאדם או סכנה, המאמר מציע לראות בו מרחב ביניים המאפשר עיבוד אבל, בתנאי שהוא מוגבל ומתווך.</div>
+                <div class="infographic-box">
+                    <div class="pillars-grid">
+                        <div class="pillar-item"><i class="fa-solid fa-scale-balanced"></i>פיקוח רגולטורי ואתי</div>
+                        <div class="pillar-item"><i class="fa-solid fa-book-medical"></i>ביסוס תיאורטי מעמיק</div>
+                        <div class="pillar-item"><i class="fa-solid fa-robot"></i>אוריינות AI למטפלים</div>
+                        <div class="pillar-item"><i class="fa-solid fa-clipboard-list"></i>פרוטוקולים קליניים ייעודיים</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-scale-balanced"></i> שיטה</div>
+                <div class="section-content">ניתוח תיאורטי ופיתוח מסגרת עבודה (<span class="en-inline">Framework</span>) אתית וקלינית, המבוססת על סקירת ספרות רחבה בתחומי הפסיכולוגיה, האתיקה והטכנולוגיה.</div>
+            </div>
+            
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-comments"></i> דיון: למה זה מורכב?</div>
+                <div class="section-content">הטכנולוגיה היא חרב פיפיות: היא יכולה לשמש גשר להסתגלות, אך גם ליצור “בועה” של הכחשה, פנטזיה או תלות. המפתח הוא גבולות, שקיפות, ותיווך אנושי.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-hand-holding-medical"></i> יישום</div>
+                <div class="section-content">שימוש ב-AI ככלי עזר בתוך הטיפול (ולא כתחליף למטפל) המאפשר למטופל לנהל דיאלוג פרידה מבוקר, מוגבל בזמן ובמטרה.</div>
+            </div>
+            
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-graduation-cap"></i> איך זה מתחבר ללימודים אצלנו</div>
+                <div class="studies-connect">
+                    <div class="studies-item"><span class="studies-title">אתיקה מקצועית:</span> איך מעדכנים קודים קליניים כשהטכנולוגיה מקדימה את השדה.</div>
+                    <div class="studies-item"><span class="studies-title">תיאוריה כמצפן:</span> למה בלי תיאוריה טובה אי אפשר להבחין בין “תמיכה” ל“פתולוגיה”.</div>
+                    <div class="studies-item"><span class="studies-title">חשיבה ביקורתית:</span> ניסוח כללי שימוש ומגבלות לפני אימוץ כלי חדש.</div>
+                    <div class="studies-item"><span class="studies-title">פסיכולוגיה של קשר:</span> מה ההבדל בין עיבוד אבל לבין הימנעות מאבל.</div>
+                </div>
+            </div>
+            
+            <div class="research-section" style="margin-top:30px; border-top:1px dashed #cbd5e0; padding-top:20px;">
+                <p style="font-weight:700; color:var(--text-dark); font-size:1.05rem;"><i class="fa-regular fa-lightbulb" style="color:var(--kinneret-orange); margin-left:5px;"></i>שאלה קטנה לסיום</p>
+                <p style="font-style:italic;">אם אפשר “לדבר” עם דמות דיגיטלית של אדם אהוב—מה ייחשב בעינינו עיבוד אבל, ומה ייחשב הימנעות מאבל?</p>
+            </div>
+
+            <a href="https://doi.org/10.1177/00302228251372418" target="_blank" class="btn-link">למאמר המלא ב-SAGE</a>
+            <button class="btn-copy" onclick="copyText('https://doi.org/10.1177/00302228251372418')"><i class="fa-regular fa-copy"></i> העתקת קישור</button>
+        </div>
+    </div>
+
+    <!-- KUMAR DETAIL -->
+    <div class="detail-view" id="detail-kumar">
+        <div class="detail-header"><button class="btn-back" onclick="closeAllDetails()"><i class="fa-solid fa-arrow-right"></i> חזרה</button></div>
+        <div class="detail-body">
+            <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=600&auto=format&fit=crop" class="article-img" alt="AI Research">
+            
+            <h2 class="en-title" style="margin-bottom:5px;">When large language models are reliable for judging empathic communication</h2>
+            <div class="ltr-content" style="color:var(--kinneret-teal); font-weight:700; font-size:0.9rem; margin-bottom:20px;">
+                Kumar et al. (2026) • Nature Machine Intelligence
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-circle-question"></i> שאלת המחקר</div>
+                <div class="section-content">האם מודלי שפה גדולים (<span class="en-inline">LLMs</span>) יכולים להעריך ולשפוט אמפתיה בשיחות אנושיות באותה מהימנות כמו מומחים אנושיים?</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-book-open"></i> רקע קצר</div>
+                <div class="section-content">אמפתיה נחשבת “כישרון אנושי” או אינטואיטיבי, אבל בפועל, במחקר ובהדרכה קלינית, אנו מעריכים אותה באמצעות רובריקות, סולמות וכללים מוגדרים. השאלה המרכזית היא האם בינה מלאכותית מסוגלת ליישם את הכללים המורכבים הללו באופן עקבי ומדויק.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-scale-balanced"></i> שיטה</div>
+                <div class="section-content">החוקרים ניתחו 200 שיחות תמיכה רגשית אמיתיות (<span class="en-inline">Peer Support</span>). הם ביצעו השוואה סטטיסטית של מהימנות בין שלושה סוגי מעריכים: מומחים קליניים, קהל מעריכים לא מיומנים (הקהל הרחב), ומודלי שפה גדולים (<span class="en-inline">LLMs</span>).</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-clipboard-check"></i> ממצאים: דיוק בהשוואה למומחים</div>
+                <div class="infographic-box">
+                    <div class="chart-row">
+                        <div class="chart-label">AI (LLMs)</div>
+                        <div class="chart-bar-container"><div class="chart-bar" style="background:#1C8F6A; --w:90%"></div></div>
+                        <div class="chart-val">גבוה</div>
+                    </div>
+                    <div class="chart-row">
+                        <div class="chart-label">קהל רחב</div>
+                        <div class="chart-bar-container"><div class="chart-bar" style="background:#718096; --w:60%"></div></div>
+                        <div class="chart-val">נמוך</div>
+                    </div>
+                </div>
+                <div class="section-content">ה-LLMs הציגו באופן עקבי ביצועים הדומים מאוד לאלו של המומחים, ועלו בביצועיהם על מעריכים לא מיומנים, גם בזיהוי ניואנסים מורכבים — במיוחד כשהקריטריונים להערכה הוגדרו היטב מראש.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-comments"></i> דיון: מה המשמעות?</div>
+                <div class="section-content">זה לא אומר שה-AI “מרגיש אמפתיה”. זה אומר שהוא יכול לזהות דפוסים טקסטואליים של תקשורת אמפתית (שיקוף, תיקוף, שאילת שאלות) באופן עקבי. המסקנה תלויה מאוד בשאלה אם הגדרנו מראש “מה נחשב אמפתיה” בצורה מדויקת ואופרציונלית.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-hand-holding-medical"></i> יישום</div>
+                <div class="section-content"><span class="en-inline">Scalable Empathy Training</span>: פיתוח מערכות שיספקו משוב אוטומטי, אובייקטיבי ומיידי לסטודנטים לפסיכולוגיה ולמטפלים מתחילים על איכות התקשורת האמפתית שלהם בסימולציות.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-graduation-cap"></i> איך זה מתחבר ללימודים אצלנו</div>
+                <div class="studies-connect">
+                    <div class="studies-item"><span class="studies-title">מהימנות בין שופטים (Interrater Reliability):</span> למה זה לב המדע כשאין “אמת” אחת מוחלטת.</div>
+                    <div class="studies-item"><span class="studies-title">מדידה של תכונות חמקמקות:</span> איך הופכים מושג כמו “אמפתיה” למשתנה שניתן למדידה בלי לרדד את המשמעות שלו.</div>
+                    <div class="studies-item"><span class="studies-title">תוקף ומגבלות:</span> איך בודקים מתי כלי מדידה עובד באמת ומתי הוא רק “נראה חכם” או מחקה שפה.</div>
+                    <div class="studies-item"><span class="studies-title">הכשרה מקצועית:</span> הפוטנציאל של משוב אמין ומיידי לשיפור מיומנויות תקשורת קלינית ("הראיון קליני").</div>
+                </div>
+            </div>
+
+            <div class="research-section" style="margin-top:30px; border-top:1px dashed #cbd5e0; padding-top:20px;">
+                <p style="font-weight:700; color:var(--text-dark); font-size:1.05rem;"><i class="fa-regular fa-lightbulb" style="color:var(--kinneret-orange); margin-left:5px;"></i>שאלה קטנה לסיום</p>
+                <p style="font-style:italic;">אם מערכת טכנולוגית יכולה להעריך אמפתיה בעקביות ובדיוק — האם השימוש במשוב שלה יכול להפוך גם אותנו לאנשים אמפתיים יותר?</p>
+            </div>
+
+            <a href="https://doi.org/10.1038/s42256-025-01169-6" target="_blank" class="btn-link">למאמר המלא ב-Nature</a>
+            <button class="btn-copy" onclick="copyText('https://doi.org/10.1038/s42256-025-01169-6')"><i class="fa-regular fa-copy"></i> העתקת קישור</button>
+        </div>
+    </div>
+
+    <!-- HAYDEN DETAIL -->
+    <div class="detail-view" id="detail-hayden">
+        <div class="detail-header"><button class="btn-back" onclick="closeAllDetails()"><i class="fa-solid fa-arrow-right"></i> חזרה</button></div>
+        <div class="detail-body">
+            <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?q=80&w=600&auto=format&fit=crop" class="article-img" alt="Brain Connectivity">
+            
+            <h2 class="en-title" style="margin-bottom:5px;">Rethinking the centrality of brain areas in understanding functional organization</h2>
+            <div class="ltr-content" style="color:var(--kinneret-blue); font-weight:700; font-size:0.9rem; margin-bottom:20px;">
+                Hayden et al. (2025) • Nature Neuroscience
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-circle-question"></i> שאלת המחקר</div>
+                <div class="section-content">האם החלוקה המסורתית של קליפת המוח ל"אזורים" בדידים (<span class="en-inline">Areas/Parcellation</span>) היא הדרך הנכונה להבין תפקוד מוחי?</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-lightbulb"></i> חידוש</div>
+                <div class="section-content">ערעור על אחת הפרדיגמות הבסיסיות ביותר במדעי המוח. המאמר טוען ש"אזורים" הם רק עיקרון מארגן אחד מיני רבים, ולעיתים קרובות אינם מסבירים היטב תהליכים קוגניטיביים.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-scale-balanced"></i> שיטה</div>
+                <div class="section-content">סקירת ספרות מקיפה (Perspective) המשלבת ממצאים מנוירו-אנטומיה, אלקטרופיזיולוגיה והדמיה תפקודית.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-clipboard-check"></i> ממצאים עיקריים</div>
+                <div class="section-content">אין חפיפה מלאה בין מבנה (ציטוארכיטקטורה) לבין קישוריות או תפקוד. גבולות האזורים הם לעיתים שרירותיים ואינם משקפים את זרימת המידע האמיתית.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-comments"></i> דיון</div>
+                <div class="section-content">יש לעבור למודלים של <span class="en-inline">Distributed Networks</span> (רשתות מבוזרות) ו-<span class="en-inline">Functional Gradients</span> (שינויים הדרגתיים), המסבירים טוב יותר התנהגות מורכבת מאשר מודל "קופסאות" מבודדות.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-hand-holding-medical"></i> יישום</div>
+                <div class="section-content">שינוי בשיטות המחקר ובניתוח נתונים: פחות חיפוש אחר "מרכז הפחד" או "אזור השפה", ויותר מיפוי של דינמיקה רשתית.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-graduation-cap"></i> איך זה מתחבר ללימודים אצלנו</div>
+                <div class="studies-connect">
+                    <div class="studies-item"><span class="studies-title">זהירות מהפשטת יתר:</span> “הסבר יפה” יכול להיות הסבר מטעה.</div>
+                    <div class="studies-item"><span class="studies-title">חשיבה על מודלים:</span> ההבדל בין מודל אזורי (דיסקרטי) לבין מודל רשת/גרדיאנט (רציף).</div>
+                    <div class="studies-item"><span class="studies-title">תוקף והיסקים:</span> למה “אקטיבציה באזור” לא בהכרח אומרת “הסיבה להתנהגות”.</div>
+                    <div class="studies-item"><span class="studies-title">קשר לשיטות מחקר:</span> איך בחירת שיטת ניתוח קובעת את הסיפור שנקבל.</div>
+                </div>
+            </div>
+
+            <div class="research-section" style="margin-top:30px; border-top:1px dashed #cbd5e0; padding-top:20px;">
+                <p style="font-weight:700; color:var(--text-dark); font-size:1.05rem;"><i class="fa-regular fa-lightbulb" style="color:var(--kinneret-orange); margin-left:5px;"></i>שאלה קטנה לסיום</p>
+                <p style="font-style:italic;">אם לא נשתמש בשמות של “אזורים”, איך נקשר בין תהליך כמו זיכרון או קבלת החלטות לפעילות מוחית? כמה פעמים במדע אנחנו מתאהבים בכלי… ושוכחים שהוא לא הדבר עצמו?</p>
+            </div>
+
+            <a href="https://doi.org/10.1038/s41593-025-02166-z" target="_blank" class="btn-link">למאמר המלא ב-Nature</a>
+            <button class="btn-copy" onclick="copyText('https://doi.org/10.1038/s41593-025-02166-z')"><i class="fa-regular fa-copy"></i> העתקת קישור</button>
+        </div>
+    </div>
+
+    <!-- HELLIWELL DETAIL -->
+    <div class="detail-view" id="detail-helliwell">
+        <div class="detail-header"><button class="btn-back" onclick="closeAllDetails()"><i class="fa-solid fa-arrow-right"></i> חזרה</button></div>
+        <div class="detail-body">
+            <img src="https://images.unsplash.com/photo-1490730141103-6cac27aaab94?q=80&w=600&auto=format&fit=crop" class="article-img" alt="Happiness Sun">
+            
+            <h2 class="en-title" style="margin-bottom:5px;">Why single-item measures of wellbeing are best</h2>
+            <div class="ltr-content" style="color:var(--kinneret-red); font-weight:700; font-size:0.9rem; margin-bottom:20px;">
+                Helliwell et al. (2026) • Nature Human Behaviour
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-circle-question"></i> שאלת המחקר</div>
+                <div class="section-content">האם שאלונים מרובי-פריטים (Scales) באמת מדויקים יותר משאלה אחת פשוטה למדידת רווחה נפשית (<span class="en-inline">Wellbeing</span>)?</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-lightbulb"></i> חידוש: שקלול פנימי</div>
+                <div class="section-content">המאמר טוען ששאלונים מרובי-פריטים כופים על המשיב "נוסחה" חיצונית (משקולות קבועות) לחישוב האושר. לעומת זאת, שאלה אחת כללית מאפשרת לאדם לבצע <span class="en-inline">Endogenous Weighting</span> (שקלול פנימי) – לתת משקל אישי לכל תחום בחייו (בריאות, משפחה, פרנסה) לפי ערכיו הפרטיים, מה שמייצר מדד סובייקטיבי מדויק יותר.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-scale-balanced"></i> שיטה</div>
+                <div class="section-content">ניתוח נתונים המבוסס על סקרי ענק בינלאומיים (כגון נתוני <span class="en-inline">Gallup World Poll</span>), תוך השוואת מתאמים ושונות בין מדדים שונים.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-clipboard-check"></i> ממצאים: השוואת מתאמים</div>
+                <div class="infographic-box">
+                    <div class="comparison-row">
+                        <span class="comp-label">שאלון מרובה פריטים</span>
+                        <span class="comp-val bad">כופה משקל חיצוני</span>
+                    </div>
+                    <div class="comparison-row">
+                        <span class="comp-label">שאלה בודדת</span>
+                        <span class="comp-val good">מאפשרת שקלול אישי</span>
+                    </div>
+                </div>
+                <div class="section-content">שאלה בודדת על שביעות רצון מהחיים לוכדת את רוב השונות הרלוונטית ומכבדת את השיפוט האישי של המשיב, בעוד שחיבור פריטים יוצר לעיתים "רעש סטטיסטי" שאינו משקף את המציאות האישית.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-comments"></i> דיון</div>
+                <div class="section-content">היתרון הוא לא רק בחיסכון בזמן, אלא בתוקף (Validity). כשאנחנו נותנים לאנשים להגדיר מה חשוב להם, אנחנו מקבלים תמונה אמיתית יותר של איכות חייהם.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-hand-holding-medical"></i> יישום</div>
+                <div class="section-content">המלצה להעדיף מדד שאלה אחת בסקרים רחבי-היקף (למשל מדיניות ציבורית), ולמדוד בנפרד משתנים “מסבירים” (כגון בריאות, הכנסה, קשרים), כדי לא לערבב בין התוצאה לבין הסיבה.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-graduation-cap"></i> איך זה מתחבר ללימודים אצלנו</div>
+                <div class="studies-connect">
+                    <div class="studies-item"><span class="studies-title">בניית מדדים:</span> מה ההבדל בין “מדד” (הדבר עצמו) לבין “מודל שמסביר מדד”.</div>
+                    <div class="studies-item"><span class="studies-title">תוקף מבני (Construct Validity):</span> איך בודקים אם מדד מודד את התופעה או את ההסברים שלה.</div>
+                    <div class="studies-item"><span class="studies-title">פסיכומטריקה בפרקטיקה:</span> מתי כדאי סולם ארוך ומתי עדיף מדד קצר ותמציתי.</div>
+                    <div class="studies-item"><span class="studies-title">חשיבה מחקרית נקייה:</span> למה חשוב להפריד בין Outcome לבין Predictors.</div>
+                </div>
+            </div>
+
+            <div class="research-section" style="margin-top:30px; border-top:1px dashed #cbd5e0; padding-top:20px;">
+                <p style="font-weight:700; color:var(--text-dark); font-size:1.05rem;"><i class="fa-regular fa-lightbulb" style="color:var(--kinneret-orange); margin-left:5px;"></i>שאלה קטנה לסיום</p>
+                <p style="font-style:italic;">כשאת/ה נשאל/ת “עד כמה את/ה מרוצה מהחיים?” — מה את/ה מנסה באמת להבין?!</p>
+            </div>
+
+            <a href="https://doi.org/10.1038/s41562-026-02401-y" target="_blank" class="btn-link">למאמר המלא ב-Nature</a>
+            <button class="btn-copy" onclick="copyText('https://doi.org/10.1038/s41562-026-02401-y')"><i class="fa-regular fa-copy"></i> העתקת קישור</button>
+        </div>
+    </div>
+
+    <!-- KHACHADOURIAN DETAIL -->
+    <div class="detail-view" id="detail-khachadourian">
+        <div class="detail-header"><button class="btn-back" onclick="closeAllDetails()"><i class="fa-solid fa-arrow-right"></i> חזרה</button></div>
+        <div class="detail-body">
+            <img src="https://images.unsplash.com/photo-1531983412531-1f49a365ffed?q=80&w=600&auto=format&fit=crop" class="article-img" alt="Maternal health">
+            
+            <h2 class="en-title" style="margin-bottom:5px;">Familial confounding in the associations between maternal health and autism</h2>
+            <div class="ltr-content" style="color:var(--kinneret-teal); font-weight:700; font-size:0.9rem; margin-bottom:20px;">
+                Khachadourian et al. (2025) • Nature Medicine
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-circle-question"></i> שאלת המחקר</div>
+                <div class="section-content">האם קיים קשר סיבתי אמיתי בין מחלות האם במהלך ההיריון לבין התפתחות אוטיזם אצל הילד, או שמא מדובר בקשר עקיף?</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-book-open"></i> רקע קצר</div>
+                <div class="section-content">מחקרי אוכלוסייה רבים מצאו קשרים סטטיסטיים בין מצבים רפואיים בהריון לבין סיכון לאוטיזם. אבל קשר באוכלוסייה יכול להיווצר בגלל גורמים משפחתיים משותפים (גנטיקה, סביבה, אורח חיים) — בלי סיבתיות ישירה.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-scale-balanced"></i> שיטה</div>
+                <div class="section-content">מחקר עוקבה עצום שכלל את כל הילדים שנולדו בדנמרק בין 1998 ל-2015. החוקרים השתמשו בשיטת <span class="en-inline">Discordant Sibling Design</span> (השוואת אחים) כדי לנטרל משתנים מתערבים משפחתיים.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-clipboard-check"></i> ממצאים: השוואת מתודולוגיות</div>
+                <div class="infographic-box">
+                    <div class="comparison-row">
+                        <span class="comp-label">מחקר רגיל (אוכלוסייה)</span>
+                        <span class="comp-val bad">נמצא קשר (מתאם)</span>
+                    </div>
+                    <div class="comparison-row">
+                        <span class="comp-label">השוואת אחים (Sibling)</span>
+                        <span class="comp-val good">הקשר נעלם (אין סיבתיות)</span>
+                    </div>
+                </div>
+                <div class="section-content">בניתוח רגמצא קשר סטטיסטי עבור חלק מהמחלות/האבחנות, אך כאשר השוו בין אחים (שאחד נחשף ואחד לא), הקשר נחלש מאוד או נעלם כמעט לחלוטין עבור רוב המחלות שנבדקו.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-lightbulb"></i> חידוש</div>
+                <div class="section-content">הפרכת מיתוס רווח. הממצאים מרמזים שהסיכון המוגבר נובע בעיקר מ-<span class="en-inline">Familial Confounding</span> (גורמים גנטיים וסביבתיים המשותפים למשפחה) ולא מהמחלה עצמה בהריון.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-comments"></i> דיון</div>
+                <div class="section-content">זה ממצא מרגיע מאוד: הוא מפחית את האפשרות להסיק אשמה אישית ממחלות בהריון. במקביל, הוא מדגים עד כמה חשוב להשתמש בעיצובים מחקריים שמאפשרים להבחין בין מתאם לסיבתיות.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-hand-holding-medical"></i> יישום</div>
+                <div class="section-content">מסר קליני וציבורי: אין מקום לניהול יתר חרדתי של מחלות בהריון מתוך חשש לאוטיזם, ויש להיזהר מפרשנות יתר של מחקרי מתאם. המיקוד צריך להיות בבריאות האם והמשפחה.</div>
+            </div>
+
+            <div class="research-section">
+                <div class="section-title"><i class="fa-solid fa-graduation-cap"></i> איך זה מתחבר ללימודים אצלנו</div>
+                <div class="studies-connect">
+                    <div class="studies-item"><span class="studies-title">קונפאונדינג וסיבתיות:</span> למה מתאם הוא רק התחלה, לא סוף.</div>
+                    <div class="studies-item"><span class="studies-title">עיצובים “חזקים”:</span> השוואת אחים כטכניקת בקרה טבעית במדעי החברה והרפואה.</div>
+                    <div class="studies-item"><span class="studies-title">חשיבה ביקורתית:</span> איך לקרוא כתבות “נמצא קשר” בלי להיבהל.</div>
+                    <div class="studies-item"><span class="studies-title">אחריות מחקרית:</span> איך מעבירים ממצאים לציבור בלי לייצר אשמה או פחד.</div>
+                </div>
+            </div>
+
+            <div class="research-section" style="margin-top:30px; border-top:1px dashed #cbd5e0; padding-top:20px;">
+                <p style="font-weight:700; color:var(--text-dark); font-size:1.05rem;"><i class="fa-regular fa-lightbulb" style="color:var(--kinneret-orange); margin-left:5px;"></i>שאלה קטנה לסיום</p>
+                <p style="font-style:italic;">כשאת/ה קורא/ת “נמצא קשר בין X בהריון לבין אוטיזם” — מה הדבר הראשון שאת/ה צריך/ה לשאול כדי להבין אם מדובר בקשר סיבתי?</p>
+            </div>
+
+            <a href="https://doi.org/10.1038/s41591-024-03479-5" target="_blank" class="btn-link">למאמר המלא ב-Nature</a>
+            <button class="btn-copy" onclick="copyText('https://doi.org/10.1038/s41591-024-03479-5')"><i class="fa-regular fa-copy"></i> העתקת קישור</button>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="bottom-nav">
+        <button class="nav-btn active" onclick="switchScreen('screen-home', this)">
+            <i class="fa-solid fa-house"></i><span>שער</span>
+        </button>
+        <button class="nav-btn" onclick="switchScreen('screen-editor', this)">
+            <i class="fa-solid fa-user-tie"></i><span>עורך</span>
+        </button>
+        <button class="nav-btn" onclick="switchScreen('screen-spotlight', this)">
+            <i class="fa-solid fa-star"></i><span>גאווה</span>
+        </button>
+        <button class="nav-btn" onclick="switchScreen('screen-science', this)">
+            <i class="fa-solid fa-microscope"></i><span>מדע</span>
+        </button>
+        <button class="nav-btn" onclick="switchScreen('screen-register', this)">
+            <i class="fa-solid fa-paper-plane"></i><span>הרשמה</span>
+        </button>
+    </div>
+
+    <div id="toast"><i class="fa-solid fa-check-circle"></i> הקישור הועתק בהצלחה!</div>
+
+</div>
+
+<script>
+    // --- Navigation Logic ---
+    function switchScreen(id, btn) {
+        window.scrollTo(0,0);
+        document.querySelectorAll('.screen').forEach(s => {
+            s.classList.remove('active');
+            s.scrollTop = 0;
+        });
+        document.getElementById(id).classList.add('active');
+        
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        if(btn) btn.classList.add('active');
+        else {
+            const map = {
+                'screen-home': 0, 'screen-editor': 1, 
+                'screen-spotlight': 2, 'screen-science': 3, 'screen-register': 4
+            };
+            const btns = document.querySelectorAll('.nav-btn');
+            if(btns[map[id]]) btns[map[id]].classList.add('active');
+        }
+        closeAllDetails();
+    }
+
+    function goToScreen(id) {
+        switchScreen(id, null);
+    }
+
+    // --- Modal Logic ---
+    function openDetail(id) {
+        document.getElementById(id).classList.add('open');
+        document.getElementById(id).querySelector('.detail-body').scrollTop = 0;
+    }
+
+    function closeAllDetails() {
+        document.querySelectorAll('.detail-view').forEach(v => v.classList.remove('open'));
+    }
+
+    // --- Clipboard Logic ---
+    async function copyText(text) {
+        const toast = document.getElementById('toast');
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(text);
+                showToast();
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-9999px";
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast();
+            }
+        } catch (err) {
+            console.error('Failed to copy', err);
+        }
+        function showToast() {
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+    }
+</script>
+
+</body>
+</html>
