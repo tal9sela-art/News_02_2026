@@ -16,5 +16,8 @@
 | 2026-11 | קוגניציה והתפתחות מוסרית | Nature Human Behaviour | Stable intuition and the rise of deliberative prosociality in childhood | Margoni, F., Nava, F., Sotis, C., Levy, M. R., Capraro, V., & Nava, E. (2026). *Nature Human Behaviour, 10*(9), 1686–1697. | https://doi.org/10.1038/s41562-026-02487-4 |
 
 ## כתבי עת שכבר הופיעו (לגיוון)
-- Nature Human Behaviour: 5 מחקרים (1 בפברואר, 4 בנובמבר). כדאי לתת לו מנוחה בניוזלטרים הקרובים.
+
+הכלל: לכל היותר שני מחקרים מאותו כתב עת בכל ניוזלטר.
+
+- Nature Human Behaviour: 5 מחקרים (1 בפברואר, 4 בנובמבר). כתב עת מצוין, ואפשר להמשיך לכלול ממנו מחקר אחד או שניים בכל ניוזלטר.
 - JAMA Psychiatry, Nature Machine Intelligence, Nature Neuroscience, Nature Medicine, OMEGA: מחקר אחד כל אחד.
