@@ -14,10 +14,11 @@
 | 2026-11 | פסיכולוגיה חינוכית | Nature Human Behaviour | Longitudinal effect of early social media use on standardized learning outcomes during school career | Gui, M., Respi, C., Abbiati, G., Paladini, C., Ercolanoni, S., Milzani, F., Pirola, T., & Vezzoli, G. (2026). *Nature Human Behaviour, 10*(10), 1953–1965. | https://doi.org/10.1038/s41562-026-02522-4 |
 | 2026-11 | פסיכולוגיה של הבריאות | Nature Human Behaviour | Algorithm-assisted personalized risk communication to encourage flu vaccination in the USA: Three randomized field trials | Rosenbaum, G. M., Goren, A., Shermohammed, M., Wolk, D. M., Tice, A. M., Doyle, J. J., Meyer, M. N., & Chabris, C. F. (2026). *Nature Human Behaviour*. Advance online publication. | https://doi.org/10.1038/s41562-026-02603-4 |
 | 2026-11 | קוגניציה והתפתחות מוסרית | Nature Human Behaviour | Stable intuition and the rise of deliberative prosociality in childhood | Margoni, F., Nava, F., Sotis, C., Levy, M. R., Capraro, V., & Nava, E. (2026). *Nature Human Behaviour, 10*(9), 1686–1697. | https://doi.org/10.1038/s41562-026-02487-4 |
+| 2026-11 | פסיכולוגיה קוגניטיבית (גאווה מקומית, ד"ר טטיאנה חטוקאי) | Canadian Journal of Experimental Psychology | Embodied attention: Going beyond the office worker posture | Hatukai, T., & Fischer, M. H. (2026). Embodied attention: Going beyond the office worker posture. *Canadian Journal of Experimental Psychology / Revue canadienne de psychologie expérimentale*. Advance online publication. (לא בגישה חופשית, גישה דרך הספרייה) | https://doi.org/10.1037/cep0000408 |
 
 ## כתבי עת שכבר הופיעו (לגיוון)
 
 הכלל: לכל היותר שני מחקרים מאותו כתב עת בכל ניוזלטר.
 
 - Nature Human Behaviour: 5 מחקרים (1 בפברואר, 4 בנובמבר). כתב עת מצוין, ואפשר להמשיך לכלול ממנו מחקר אחד או שניים בכל ניוזלטר.
-- JAMA Psychiatry, Nature Machine Intelligence, Nature Neuroscience, Nature Medicine, OMEGA: מחקר אחד כל אחד.
+- JAMA Psychiatry, Nature Machine Intelligence, Nature Neuroscience, Nature Medicine, OMEGA, Canadian Journal of Experimental Psychology: מחקר אחד כל אחד.
