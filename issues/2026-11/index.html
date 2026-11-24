@@ -126,6 +126,26 @@ section{padding:64px 0 8px}
 .card .hook{font-size:.97rem;color:var(--ink-2);margin:0}
 .card-foot{margin-top:auto;padding-top:10px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:.85rem;font-weight:700}
 .card-foot .go{color:var(--c);display:flex;align-items:center;gap:6px}
+.pride-sec .eyebrow{color:var(--orange)}
+.pride-card{position:relative;display:grid;grid-template-columns:240px 1fr;width:100%;background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow-1);overflow:hidden;cursor:pointer;border:2px solid color-mix(in srgb,var(--orange) 35%,#fff);text-align:right;font-family:inherit;padding:0;color:inherit;transition:transform .25s,box-shadow .25s}
+.pride-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-2)}
+.pride-card.read .read-badge{display:inline-flex;gap:5px;align-items:center}
+.pride-art{position:relative;min-height:210px;background:linear-gradient(135deg,#FF8C29,#FC4539 55%,#0B1B3F);display:grid;place-items:center;overflow:hidden}
+.pride-art::before{content:"";position:absolute;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.12);top:-100px;left:-70px}
+.pride-art>i{font-size:4.2rem;color:rgba(255,255,255,.95);z-index:1}
+.pride-art .ribbon{position:absolute;bottom:14px;right:14px;background:#fff;color:#C2410C;font-weight:900;font-size:.78rem;padding:5px 12px;border-radius:999px;z-index:1}
+.pride-body{padding:22px 24px;display:flex;flex-direction:column;gap:8px}
+.pride-body .meta{display:flex;gap:8px;flex-wrap:wrap;font-size:.8rem;font-weight:800}
+.pride-body .tag{background:#FFEDD5;color:#C2410C;padding:4px 10px;border-radius:999px}
+.pride-body .journal{color:var(--muted)}
+.pride-body h3{font-size:1.45rem;font-weight:900;color:var(--ink)}
+.pride-body .who{font-weight:800;color:#C2410C}
+.pride-body .hook{margin:0;color:var(--ink-2)}
+.pride-body .go{color:#C2410C;font-weight:800;display:flex;align-items:center;gap:6px;margin-top:auto}
+@media(max-width:720px){.pride-card{grid-template-columns:1fr}.pride-art{min-height:140px}}
+.pride-note{background:#FFF7ED;border-right:4px solid var(--orange);border-radius:14px;padding:14px 16px}
+.pride-note .lbl{color:#C2410C;font-weight:900}
+.access-note{font-size:.88rem;color:var(--muted);margin:8px 0 0}
 .read-badge{display:none;position:absolute;top:14px;right:14px;z-index:2;background:#fff;color:var(--teal);font-weight:800;font-size:.75rem;padding:5px 10px;border-radius:999px}
 .card.read .read-badge{display:inline-flex;gap:5px;align-items:center}
 .card.hidden{display:none}
@@ -245,6 +265,7 @@ ul.pts li::before{content:"";position:absolute;right:2px;top:10px;width:9px;heig
     </a>
     <nav class="nav">
       <a href="#editor">דבר העורך</a>
+      <a href="#pride">גאווה מקומית</a>
       <a href="#studies">חזית המדע</a>
       <a href="#glossary">מילון מושגים</a>
       <a href="#quiz">מה למדנו?</a>
@@ -257,7 +278,7 @@ ul.pts li::before{content:"";position:absolute;right:2px;top:10px;width:9px;heig
 <div class="hero" id="top">
   <div class="wrap hero-grid">
     <div>
-      <span class="kicker"><span class="dot"></span> ניוזלטר נובמבר 2026 · חמישה מחקרים חדשים</span>
+      <span class="kicker"><span class="dot"></span> ניוזלטר נובמבר 2026 · חמישה מחקרים חדשים · גאווה מקומית</span>
       <h1>INSIGHT</h1>
       <div class="sub">הניוזלטר של המחלקה לפסיכולוגיה <span>|</span> האקדמית כנרת</div>
     </div>
@@ -283,13 +304,24 @@ ul.pts li::before{content:"";position:absolute;right:2px;top:10px;width:9px;heig
       <p>מעכשיו הניוזלטר יתפרסם אחת לשלושה שבועות. בכל פעם נציג ארבעה עד חמישה מחקרים חדשים מכתבי העת המובילים בפסיכולוגיה, כולם בגישה חופשית, כך שתוכלו לקרוא בעצמכם את המאמר המלא.</p>
       <p>הפעם יש למחקרים חוט מקשר: <strong>הטכנולוגיה שסביבנו והנפש שבתוכנו</strong>. נעסוק בצ'אטבוטים שעלולים להחמיר מצבים פסיכוטיים, בילדים שפותחים חשבון ברשת חברתית מוקדם מדי ובאלגוריתם שעוזר לעודד אנשים להתחסן. לצד זה ננסה להבין מדוע נערות בגיל ההתבגרות סובלות מדיכאון יותר מנערים, ונגלה שילדים בני שלוש משתפים יותר פעולה ואומרים יותר אמת דווקא כשאין להם זמן לחשוב.</p>
       <p>שימו לב גם לשיטות המחקר. בכל אחד מהמחקרים בחרו החוקרים בכלי אחר: סקירה של תיקים רפואיים, מחקר אורך, ניסוי שדה עם עשרות אלפי משתתפים ומשחקים כלכליים עם סוכריות. הכלי שבוחרים קובע אילו מסקנות מותר להסיק, ואולי זה השיעור החשוב ביותר שמחקר יכול ללמד אותנו.</p>
+      <p class="pride-note"><span class="lbl"><i class="fa-solid fa-star"></i> גאווה מקומית:</span> הפעם אני גאה במיוחד להציג מאמר חדש של <strong>ד"ר טטיאנה חטוקאי מהמחלקה שלנו</strong>, שנכתב יחד עם פרופ' מרטין פישר מאוניברסיטת פוטסדאם שבגרמניה ופורסם בכתב העת <i>Canadian Journal of Experimental Psychology</i>. <strong>זהו מאמר חשוב, כי הוא מערער על הנחה שליוותה את חקר הקשב במשך עשרות שנים</strong>: שאפשר להבין את הקשב כשהנבדק יושב בלי לזוז מול מסך ולוחץ על כפתורים. המחברים מראים <strong>שתנוחת הגוף, מיקום הידיים והמוכנות לפעולה משנים את מה שאנחנו שמים לב אליו</strong>, ומציעים דרך חדשה לחשוב על הקשב ולחקור אותו, עם השלכות אפשריות על למידה, על עיצוב סביבות עבודה ועל טיפול. זהו מחקר ברמה בין-לאומית שנולד כאן, בכנרת. המאמר אינו בגישה חופשית, אבל אתם יכולים לקרוא אותו דרך הספרייה, ואת הסיכום שלו תמצאו מיד כאן למטה.</p>
       <p>בסוף הניוזלטר מחכים לכם מילון מושגים קצר ופינת "מה למדנו?" עם שאלות על שיטות המחקר. נסו את כוחכם 😉</p>
       <div class="sign">קריאה מהנה!<br>טל</div>
       <div class="hero-cta">
         <a class="btn btn-blue" href="#studies"><i class="fa-solid fa-microscope"></i> למחקרים</a>
+        <a class="btn btn-line" href="#pride"><i class="fa-solid fa-star"></i> לגאווה המקומית</a>
       </div>
     </div>
   </div>
+</section>
+
+<!-- ================= LOCAL PRIDE ================= -->
+<section id="pride" class="pride-sec">
+  <div class="sec-head">
+    <div><div class="eyebrow">גאווה מקומית</div><h2>מחקר חדש מהמחלקה שלנו</h2></div>
+    <p>מחקרים חדשים של חברי הסגל במחלקה לפסיכולוגיה באקדמית כנרת.</p>
+  </div>
+  <div id="prideBox"></div>
 </section>
 
 <!-- ================= STUDIES ================= -->
@@ -562,6 +594,54 @@ const STUDIES = [
   critique:'מי שהעביר את הניסוי ידע לאיזה תנאי שובץ כל ילד (לחץ זמן או השהיה) ורשם את התשובות בעצמו בעט ונייר, והמחקר לא נרשם מראש. בניסויים עם ילדים צעירים, ציפיות של הנסיין עלולות להשפיע בעדינות על ההתנהגות, למשל דרך טון הדיבור או הבעות הפנים, ולכן היעדר סמיות הוא חולשה של ממש. בנוסף, לא היה תנאי ניטרלי בלי מגבלת זמן, כך שאי אפשר לדעת איך הילדים מחליטים באופן טבעי. החוקרים בדקו אם לחץ הזמן פשוט בלבל את הצעירים (ההוראות ניתנו בלי לחץ זמן, והתוצאות נשמרו גם בלי בני 3–4), אבל השפעה של ציפיות הנסיין לא נשללה.',
   connect:[['פסיכולוגיה קוגניטיבית','מודל התהליך הכפול: חשיבה מהירה לעומת חשיבה איטית.'],['פסיכולוגיה התפתחותית','מפיאז\'ה וקולברג ועד מחקרי תינוקות: מתי מופיע המוסר?'],['שיטות מחקר','ניתוח גורמים, וההבדל בין מחקר חתך למחקר אורך.']],
   ask:'האם אדם שעוזר "מהבטן" ראוי ליותר הערכה מאדם שעוזר אחרי שחשב על כך? או שמא להפך?'
+},
+{
+  id:'embodied-attention', color:'#FF8C29', icon:'fa-hand', field:'פסיכולוגיה קוגניטיבית', mins:6, local:true,
+  link:'https://psycnet.apa.org/fulltext/2028-10696-001.html',
+  authorsHe:'ד"ר טטיאנה חטוקאי (האקדמית כנרת) ופרופ\' מרטין פישר (אוניברסיטת פוטסדאם)',
+  journal:'Canadian Journal of Experimental Psychology', title:'הקשב קם מהכיסא: איך הגוף מכוון את תשומת הלב',
+  hook:'מה קורה לקשב כשאנחנו קמים מהכיסא, מקרבים את הידיים למסך או מתכוננים לתפוס חפץ?',
+  orig:'Embodied Attention: Going Beyond the Office Worker Posture',
+  cite:'Hatukai & Fischer (2026) · Canadian Journal of Experimental Psychology',
+  apa:"Hatukai, T., &amp; Fischer, M. H. (2026). Embodied attention: Going beyond the office worker posture. <i>Canadian Journal of Experimental Psychology / Revue canadienne de psychologie expérimentale</i>. Advance online publication. https://doi.org/10.1037/cep0000408",
+  doi:'10.1037/cep0000408',
+  tldr:'במשך עשרות שנים חקרו את הקשב אצל נבדקים שיושבים בלי לזוז מול מסך ולוחצים על כפתורים. ד"ר טטיאנה חטוקאי מהמחלקה שלנו ופרופ\' מרטין פישר מראים, בעזרת ממצאים מארבע פרדיגמות קלאסיות, שתנוחת הגוף, מיקום הידיים והמוכנות לפעולה משנים את הקשב באופן שיטתי. לכן הם מציעים לראות בקשב חלק מההכנה לפעולה: "להתכונן זה כבר לשים לב".',
+  question:'האם הקשב הוא רק מנגנון "מנטלי" שבוחר איזה מידע לעבד, או שהגוף מעצב אותו גם כן, דרך התנוחה, מיקום הידיים והמוכנות לפעולה? והאם הדרך שבה חקרו קשב עד היום השפיעה על האופן שבו המדע הבין אותו?',
+  background:'התיאוריות המקובלות מתארות את הקשב כ"פנס" או כמסנן שבוחר אילו גירויים יעובדו. אבל כמעט כל הניסויים הקלאסיים בקשב נערכו ב"תנוחת עובד המשרד": הנבדק יושב בלי לזוז, עיניו נעוצות בנקודת מיקוד והוא מגיב בלחיצה על כפתור. לפי גישת הקוגניציה המגולמת (embodied cognition), תפיסה וחשיבה קשורות באופן הדוק לגוף ולפעולה. כבר לפני עשרות שנים הוצע לראות בקשב "בחירה לשם פעולה" ולא רק "בחירה לשם תפיסה". המאמר מבקש לחבר את הקווים האלה למסגרת אחת.',
+  methodText:'זהו מאמר תיאורטי שמבוסס על סקירה ממוקדת של הספרות, ולא ניסוי חדש. המחברים בוחנים מחדש ממצאים מארבע פרדיגמות "קנוניות" של חקר הקשב, ובכל אחת מהן מראים איך שינוי בגוף (תנוחה, מיקום הידיים, סוג התגובה ואפילו נשימה ודופק) משנה את האפקט המוכר. על בסיס זה הם משרטטים מסגרת תיאורטית מדורגת, שלפיה הקשב מעוגן בגוף (grounded), מגולם בפעולה (embodied) ותלוי בהקשר (situated). בהמשך הם דנים במנגנונים אפשריים ובאתגרים, ומציעים כיווני מחקר לעתיד.',
+  facts:[['סוג המאמר','סקירה תיאורטית'],['פרדיגמות שנסקרו','פוזנר, אריקסן, אגלי, סטרופ'],['המסגרת המוצעת','מעוגן · מגולם · תלוי הקשר'],['מוסדות','האקדמית כנרת ואוניברסיטת פוטסדאם']],
+  methodPts:[
+    '<b>פוזנר (זיהוי מטרה אחרי רמז)</b>: בודקת כמה מהר מזהים מטרה שמופיעה במקום שאליו הופנה הקשב.',
+    '<b>אריקסן (גירויים מסיחים)</b>: בודקת עד כמה גירויים שכנים מפריעים להגיב למטרה שבמרכז.',
+    '<b>אגלי (מרחב לעומת אובייקט)</b>: בודקת אם הקשב בוחר לפי מיקום במרחב או לפי אובייקט שלם.',
+    '<b>סטרופ (מילה מול צבע)</b>: בודקת את השליטה בקונפליקט, כשצריך לומר את צבע הדיו של מילה שמציינת צבע אחר.'
+  ],
+  viz:`<div class="viz"><div class="viz-t">ארבע פרדיגמות קלאסיות, ומה הגוף משנה בהן</div>
+    <div class="types">
+      <div class="type"><b>פוזנר <em>זיהוי</em></b><span>יד קרובה למטרה: זיהוי מהיר יותר</span></div>
+      <div class="type"><b>אריקסן <em>הפרעה</em></b><span>ידיים משני צדי המטרה: פחות הסחה</span></div>
+      <div class="type"><b>אגלי <em>בחירה</em></b><span>הכנה להצבעה או לאחיזה משנה את אופן הבחירה</span></div>
+      <div class="type"><b>סטרופ <em>שליטה</em></b><span>תנוחות ידיים ועמידה: לעיתים פחות קונפליקט</span></div>
+    </div></div>
+  <div class="viz"><div class="viz-t">מתוך מחקר קודם של ד"ר חטוקאי ועמיתיה (2020): "אפקט רודן" במשימת סטרופ</div>
+    <div class="types">
+      <div class="type"><b>יד על הסנטר</b><span>כמו הפסל "החושב" של רודן: אפקט סטרופ קטן יותר</span></div>
+      <div class="type"><b>ידיים ליד המסך</b><span>אפקט קרבת היד: אפקט סטרופ קטן יותר</span></div>
+      <div class="type"><b>ידיים על הברכיים</b><span>תנאי ההשוואה</span></div>
+    </div><div class="viz-note">תיאור איכותי לפי המאמר, בלי נתונים מספריים.</div></div>`,
+  results:[
+    '<b>קרבת היד</b>: מטרות שמופיעות ליד היד מזוהות מהר יותר. דפוס דומה נמצא ליד כף רגל גלויה, אבל לא ליד כף רגל מוסתרת.',
+    '<b>קצבי הגוף</b>: הזיהוי חלש יותר אחרי שלב ההתכווצות במחזור פעימת הלב, ושלב הנשימה (שאיפה או נשיפה) מטה את הקשב ימינה או שמאלה.',
+    '<b>כוונת הפעולה</b>: על אותו מסך בדיוק, הכנה להצבעה מגדילה את "המחיר" של הזזת הקשב במרחב, והכנה לאחיזה מגדילה את המחיר של מעבר בין אובייקטים.',
+    '<b>שליטה קוגניטיבית</b>: תנוחת "החושב" של רודן הקטינה את אפקט הסטרופ במידה דומה לקירוב הידיים למסך, אף שבתנוחה הזאת הידיים רחוקות מהגירויים. לכן ייתכן שמדובר במנגנון נפרד.',
+    '<b>לא הכול יציב</b>: שחזור צמוד לא מצא שעמידה משפרת את הקשב, ויש חוקרים שתיארו את אפקט קרבת היד כ"קטן ושברירי". המחברים מפרשים זאת כרגישות להקשר וקוראים למדוד גם את הגוף עצמו.'
+  ],
+  bottom:'הקשב אינו רק "פנס" בתוך הראש. מה שאנחנו שמים לב אליו תלוי גם במה שהגוף שלנו מוכן לעשות. ייתכן שהתנוחה הקבועה של ניסויי המעבדה לא רק מדדה את הקשב, אלא גם עיצבה את הדרך שבה המדע תיאר אותו.',
+  implications:'למחקר: כדאי לשלב בניסויי קשב מדדים גופניים ופיזיולוגיים, כמו כוח אחיזה, נשימה, פעילות שרירים ושונות בקצב הלב, ולבדוק את הקשב גם מחוץ למעבדה, למשל בנהיגה ובכיתה. המחברים גם מזכירים שמערכות בינה מלאכותית כבר מסוגלות לייצר זמני תגובה שנראים אנושיים, ולכן בניסויים מקוונים חשוב לוודא שהנתונים באמת מגיעים מאדם. מעבר למעבדה, להבנה הזאת יש השלכות אפשריות על תכנון סביבות למידה ועבודה, על עיצוב ממשקים ועל התערבויות קליניות.',
+  caveat:'המחברים מקדישים פרק שלם לאתגרים. אפקט קרבת היד תואר בחלק מהמחקרים כ"קטן ושברירי" שמופיע רק בתנאים מסוימים, אף שמחקר מאוחר יותר שחזר אותו. שחזור צמוד של אפקט העמידה לא מצא אותו. במשימת סטרופ רגשית, קרבת הידיים דווקא הגבירה את ההפרעה. בנוסף, עדיין לא ברור מה בדיוק משתנה בעקבות תנוחת הידיים: המיקום במרחב, האובייקט עצמו או האפשרות לפעול עליו.',
+  critique:'זוהי סקירה ממוקדת ולא סקירה שיטתית או מטה-אנליזה. המחברים בחרו "קבוצה נבחרת של ממצאים" כדי להדגים את טענתם, בלי לתאר כיצד אותרו המחקרים ובלי לשקלל את גודל האפקטים, ולכן קשה לדעת כמה חזקה התמונה הכוללת, במיוחד כשחלק מהאפקטים קטנים ושנויים במחלוקת. בנוסף, המסגרת התיאורטית גמישה מאוד: כשאפקט אינו משתחזר הוא מתפרש כרגישות להקשר, וכשכיוון ההטיה מתהפך בין משימות (כמו בממצאי הנשימה) הממצא עדיין נחשב תמיכה בהשפעת הגוף. כדי שהגישה תהיה ניתנת להפרכה, כדאי לנסח מראש תחזיות מדויקות: איזו תנוחה תשנה איזה אפקט, באיזה כיוון ובאיזה גודל. הקריאה של המחברים לשלב מדדים פיזיולוגיים היא צעד חשוב בכיוון הזה.',
+  connect:[['פסיכולוגיה קוגניטיבית','מודלים של קשב: הפנס, המסנן, וקשב מבוסס מרחב לעומת קשב מבוסס אובייקט.'],['פסיכולוגיה פיזיולוגית','המסלולים הראייתיים, הקורטקס הקדם-מוטורי ונוירונים שמגיבים גם למגע וגם לגירוי חזותי ליד הגוף.'],['שיטות מחקר','תוקף אקולוגי: האם מה שנמדד במעבדה, בישיבה מול מסך, מייצג את הקשב בחיים האמיתיים? וגם: למה חשוב לשחזר ממצאים.']],
+  ask:'חשבו על ההרצאה האחרונה שלכם: באיזו תנוחה ישבתם, והאם לדעתכם היא השפיעה על הריכוז? איך הייתם בודקים את זה במחקר?'
 }
 ];
 
@@ -573,6 +653,9 @@ const GLOSSARY = [
   ['מודל התהליך הכפול','Dual-process model','הרעיון שפועלות אצלנו שתי מערכות חשיבה: מערכת מהירה ואינטואיטיבית ומערכת איטית ושקולה. לחץ זמן מעודד שימוש בראשונה, והשהיה מעודדת שימוש בשנייה.','#0057C4'],
   ['ניתוח גורמים','Factor Analysis','שיטה סטטיסטית שמחפשת "גורם משותף" המסביר מדוע כמה התנהגויות או שאלות נוטות להופיע יחד.','#0057C4'],
   ['מחקר רטרוספקטיבי','Retrospective study','מחקר שמתבסס על נתונים שנאספו בעבר, למשל תיקים רפואיים, במקום לאסוף נתונים חדשים. הוא מהיר וזול, אך תלוי במה שתועד.','#6D4AFF'],
+  ['קוגניציה מגולמת','Embodied cognition','הגישה שלפיה תפיסה, חשיבה וקשב אינם מתרחשים רק "בראש", אלא קשורים לגוף, לתנועה ולסביבה.','#FF8C29'],
+  ['אפקט סטרופ','Stroop effect','האטה וטעויות כשצריך לומר את צבע הדיו של מילה שמציינת צבע אחר (למשל המילה "אדום" כתובה בכחול). משמש מדד לקונפליקט ולשליטה קוגניטיבית.','#FF8C29'],
+  ['מחקר שחזור','Replication study','מחקר שחוזר על מחקר קודם, לעיתים באותה שיטה בדיוק (שחזור צמוד), כדי לבדוק אם הממצא יציב.','#FF8C29'],
   ['מהימנות בין שופטים','Inter-rater reliability','מידת ההסכמה בין שני מעריכים שמסווגים את אותו מקרה. הסכמה גבוהה מעידה שהקטגוריות מוגדרות היטב.','#6D4AFF']
 ];
 
@@ -587,7 +670,9 @@ const QUIZ = [
   [3,'הקבוצה שקיבלה תזכורת כללית בלבד אפשרה להפריד בין ההשפעה של עצם התזכורת לבין ההשפעה של המידע על הסיכון.',true,'נכון. זוהי קבוצת ביקורת פעילה. בלעדיה לא היה אפשר לדעת אם ההודעה עבדה בגלל המידע על הסיכון או רק משום שהזכירה למטופלים להתחסן.'],
   [3,'העובדה שלא נמצא הבדל מובהק בין הודעת "אלגוריתם" להודעת "בדיקת התיק הרפואי" מוכיחה שאין ביניהן שום הבדל.',false,'לא נכון. תוצאה לא מובהקת אינה הוכחה להיעדר הבדל. במחקר הזה החוקרים חיזקו את המסקנה באמצעות ניתוח בייסיאני, שהראה תמיכה בהשערת האפס, ובכל זאת מדובר בהקשר אחד ובמניפולציה מסוימת.'],
   [4,'זהו מחקר אורך שעקב אחר אותם ילדים מגיל 3 ועד גיל 10.',false,'לא נכון. זהו מחקר חתך: נבדקו ילדים שונים בגילאים שונים. לכן ההבדלים בין הגילאים עשויים לנבוע גם מהבדלים בין הילדים עצמם, ולא רק מההתפתחות.'],
-  [4,'השיבוץ האקראי לתנאי לחץ זמן או לתנאי השהיה מאפשר להסיק שהתנאי עצמו השפיע על ההחלטות.',true,'נכון. הקצאה אקראית מאזנת בין הקבוצות במאפיינים אחרים, ולכן הבדל בין התנאים מיוחס למניפולציה. זהו היתרון המרכזי של ניסוי על פני מחקר מתאמי.']
+  [4,'השיבוץ האקראי לתנאי לחץ זמן או לתנאי השהיה מאפשר להסיק שהתנאי עצמו השפיע על ההחלטות.',true,'נכון. הקצאה אקראית מאזנת בין הקבוצות במאפיינים אחרים, ולכן הבדל בין התנאים מיוחס למניפולציה. זהו היתרון המרכזי של ניסוי על פני מחקר מתאמי.'],
+  [5,'המאמר של חטוקאי ופישר הוא ניסוי שבו הנבדקים חולקו באקראי לתנוחות גוף שונות.',false,'לא נכון. זהו מאמר סקירה תיאורטי: המחברים מסכמים ומפרשים מחדש ממצאים של מחקרים קודמים ומציעים מסגרת תיאורטית. סקירה יכולה לארגן את הידע ולהציע השערות חדשות, אבל אינה בודקת אותן בעצמה.'],
+  [5,'כששחזור צמוד לא מצא את "אפקט העמידה", זה מלמד שחשוב לחזור על ממצאים לפני שמסיקים מהם מסקנות כלליות.',true,'נכון. ממצא בודד, גם אם פורסם, יכול לנבוע ממקריות, ממדגם קטן או מתנאים מיוחדים. מחקרי שחזור בודקים אם האפקט יציב. המחברים מתייחסים לכישלון השחזור ומציעים שהאפקט אולי תלוי בתנאים, למשל בעמידה שדורשת שמירה על שיווי משקל.']
 ];
 
 /* ============ RENDER ============ */
@@ -595,7 +680,7 @@ const $ = s => document.querySelector(s);
 const readSet = new Set(JSON.parse(localStorage.getItem('insight-2026-11-read')||'[]'));
 
 function renderCards(){
-  $('#grid').innerHTML = STUDIES.map((s,i)=>`
+  $('#grid').innerHTML = STUDIES.map((s,i)=>s.local?'':`
     <button class="card ${readSet.has(s.id)?'read':''}" style="--c:${s.color}" data-field="${s.field}" onclick="openSheet(${i})">
       <span class="read-badge"><i class="fa-solid fa-check"></i> נקרא</span>
       <div class="card-art"><i class="fa-solid ${s.icon} big-ico"></i><span class="num">0${i+1}</span></div>
@@ -609,7 +694,19 @@ function renderCards(){
   if($('#heroStack')) $('#heroStack').innerHTML = STUDIES.map((s,i)=>`
     <button class="mini" onclick="openSheet(${i})"><i class="fa-solid ${s.icon}" style="background:${s.color}"></i>
       <span><b>${s.title}</b><small>${s.field} · ${s.journal}</small></span></button>`).join('');
-  const fields = ['הכול',...STUDIES.map(s=>s.field)];
+  $('#prideBox').innerHTML = STUDIES.map((s,i)=>!s.local?'':`
+    <button class="pride-card ${readSet.has(s.id)?'read':''}" onclick="openSheet(${i})">
+      <span class="read-badge"><i class="fa-solid fa-check"></i> נקרא</span>
+      <div class="pride-art"><i class="fa-solid ${s.icon}"></i><span class="ribbon"><i class="fa-solid fa-star"></i> מהמחלקה שלנו</span></div>
+      <div class="pride-body">
+        <div class="meta"><span class="tag">${s.field}</span><span class="journal">${s.journal}</span></div>
+        <h3>${s.title}</h3>
+        <div class="who">${s.authorsHe}</div>
+        <p class="hook">${s.hook}</p>
+        <span class="go">לקריאת הסיכום <i class="fa-solid fa-arrow-left"></i></span>
+      </div>
+    </button>`).join('');
+  const fields = ['הכול',...STUDIES.filter(s=>!s.local).map(s=>s.field)];
   $('#chips').innerHTML = fields.map((f,i)=>`<button class="chip ${i?'':'active'}" onclick="filterBy(this,'${f}')">${f}</button>`).join('');
 }
 function filterBy(btn,f){
@@ -641,9 +738,11 @@ function studyHTML(s,i){
       <div class="connect">${s.connect.map(c=>`<div><b>${c[0]}</b>${c[1]}</div>`).join('')}</div></div>
     <div class="blk ask"><div class="blk-h"><i class="fa-regular fa-comments"></i>שאלה לדיון</div><p>${s.ask}</p></div>
     <div class="links">
-      <a class="btn btn-c" href="https://doi.org/${s.doi}" target="_blank" rel="noopener"><i class="fa-solid fa-unlock"></i> למאמר המלא (גישה חופשית)</a>
-      <button class="btn btn-line" onclick="copyText('https://doi.org/${s.doi}')"><i class="fa-regular fa-copy"></i> העתקת קישור</button>
+      ${s.link?`<a class="btn btn-c" href="${s.link}" target="_blank" rel="noopener"><i class="fa-solid fa-building-columns"></i> למאמר המלא (גישה דרך הספרייה)</a>
+      <button class="btn btn-line" onclick="copyText('${s.link}')"><i class="fa-regular fa-copy"></i> העתקת קישור</button>`:`<a class="btn btn-c" href="https://doi.org/${s.doi}" target="_blank" rel="noopener"><i class="fa-solid fa-unlock"></i> למאמר המלא (גישה חופשית)</a>
+      <button class="btn btn-line" onclick="copyText('https://doi.org/${s.doi}')"><i class="fa-regular fa-copy"></i> העתקת קישור</button>`}
     </div>
+    ${s.link?`<p class="access-note"><i class="fa-solid fa-circle-info"></i> המאמר אינו בגישה חופשית. סטודנטים באקדמית כנרת יכולים לקרוא אותו דרך הספרייה של המכללה.</p>`:''}
     ${i<STUDIES.length-1?`<button class="btn next-study" onclick="openSheet(${i+1})">למחקר הבא: ${STUDIES[i+1].title} <i class="fa-solid fa-arrow-left"></i></button>`:`<a class="btn next-study" href="#quiz" onclick="closeSheet()">סיימתם? בואו נראה מה למדנו <i class="fa-solid fa-bolt"></i></a>`}
   </div>`;
 }
